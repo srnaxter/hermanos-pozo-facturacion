@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Gestor de facturas de Hermanos Pozo" />
+  <title>Hermanos Pozo · Facturación</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="loginView" class="login-shell">
+    <div class="login-art" aria-hidden="true">
+      <div class="art-glow"></div>
+      <div class="brand-lockup"><span class="brand-mark">HP</span><span>Hermanos Pozo</span></div>
+      <div class="login-quote"><span>“</span><p>La claridad también es una forma de confianza.</p></div>
+      <div class="art-footer">Facturación sencilla · Desde 1998</div>
+    </div>
+    <main class="login-card-wrap">
+      <section class="login-card" aria-labelledby="loginTitle">
+        <div class="mobile-brand"><span class="brand-mark">HP</span> Hermanos Pozo</div>
+        <div class="eyebrow">Área privada</div>
+        <h1 id="loginTitle">Bienvenido de nuevo</h1>
+        <p class="muted">Accede para crear y gestionar tus facturas.</p>
+        <form id="loginForm" class="login-form">
+          <label for="username">Usuario</label>
+          <div class="input-wrap"><span>✦</span><input id="username" autocomplete="username" placeholder="admin" required /></div>
+          <label for="password">Contraseña</label>
+          <div class="input-wrap"><span>●</span><input id="password" type="password" autocomplete="current-password" placeholder="••••••••" required /><button type="button" id="togglePassword" class="eye" aria-label="Mostrar contraseña">◉</button></div>
+          <div id="loginError" class="error" role="alert"></div>
+          <button class="primary-button login-button" type="submit">Entrar al panel <span>→</span></button>
+        </form>
+        <p class="login-hint">Demo: <strong>admin</strong> · <strong>HermanosPozo2026!</strong></p>
+      </section>
+    </main>
+  </div>
+
+  <div id="appView" class="app-shell hidden">
+    <aside class="sidebar">
+      <div class="brand-lockup"><span class="brand-mark">HP</span><span>Hermanos Pozo</span></div>
+      <nav class="main-nav" aria-label="Navegación principal">
+        <a class="nav-item active" href="#"><span>▣</span> Facturas</a>
+        <a class="nav-item" id="budgetNav" href="#"><span>▤</span> Presupuestos</a>
+        <a class="nav-item" id="historyNav" href="#"><span>◷</span> Historial</a>
+      </nav>
+      <div class="sidebar-bottom"><div class="help-box"><span>?</span><div><strong>¿Necesitas ayuda?</strong><small>Estamos para ayudarte</small></div></div><button id="logoutButton" class="logout">↪ Cerrar sesión</button></div>
+    </aside>
+    <main class="main-content">
+      <header class="topbar"><div><p class="breadcrumb">Facturas <span>/</span> Nueva factura</p><h2>Nueva factura</h2></div><div class="top-actions"><span class="saved-status" id="savedStatus">● Guardado localmente</span><div class="avatar">HP</div></div></header>
+      <div class="content-grid">
+        <section class="editor-panel">
+          <div class="section-heading"><div><p class="eyebrow">Paso 1 de 1</p><h3>Detalles de la factura</h3></div><span class="draft-pill">Borrador</span></div>
+          <form id="invoiceForm">
+            <div class="form-section"><h4>Información general</h4><div class="form-grid four"><div><label for="documentType">Tipo de documento</label><select id="documentType"><option value="factura">Factura</option><option value="presupuesto">Presupuesto</option></select></div><div><label for="invoiceNumber">Número</label><input id="invoiceNumber" value="HP-2024-001" /></div><div><label for="invoiceDate">Fecha de emisión</label><input id="invoiceDate" type="date" /></div><div><label for="dueDate">Fecha de vencimiento</label><input id="dueDate" type="date" /></div></div></div>
+            <div class="form-section"><h4>Datos del cliente</h4><div class="form-grid two"><div><label for="clientName">Nombre o empresa</label><input id="clientName" value="Cliente particular" /></div><div><label for="clientTax">NIF / CIF</label><input id="clientTax" placeholder="B-00000000" /></div><div><label for="clientEmail">Correo electrónico</label><input id="clientEmail" type="email" placeholder="cliente@email.com" /></div><div><label for="clientAddress">Dirección</label><input id="clientAddress" placeholder="Calle, número, ciudad" /></div></div></div>
+            <div class="form-section items-section"><div class="items-title"><h4>Conceptos</h4><button type="button" id="addItem" class="text-button">+ Añadir concepto</button></div><div class="items-table"><div class="items-head"><span>Descripción</span><span>Unidades</span><span>Precio</span><span>IVA</span><span>Total</span><span></span></div><div id="itemsList"></div></div></div>
+            <div class="form-section bottom-fields"><div><label for="notes">Notas para el cliente</label><textarea id="notes" rows="3" placeholder="Gracias por confiar en nosotros."></textarea></div><div><label for="paymentMethod">Método de pago</label><select id="paymentMethod"><option>Transferencia bancaria</option><option>Tarjeta</option><option>Efectivo</option><option>Bizum</option></select><label for="iban">IBAN (opcional)</label><input id="iban" placeholder="ES00 0000 0000 0000 0000 0000" /></div></div>
+          </form>
+        </section>
+        <aside class="preview-panel"><div class="preview-top"><div><p class="eyebrow">Vista previa</p><h3>Factura</h3></div><button id="downloadPdf" class="primary-button">↓ Descargar PDF</button></div><div id="invoicePreview" class="invoice-paper"></div><p class="preview-tip">Consejo: revisa los datos antes de descargar el documento.</p></aside>
+      </div>
+    </main>
+  </div>
+  <div id="historyModal" class="history-modal hidden" role="dialog" aria-modal="true" aria-labelledby="historyTitle">
+    <div class="history-card">
+      <div class="history-header"><div><p class="eyebrow">Documentos guardados</p><h3 id="historyTitle">Historial de facturas</h3></div><button id="closeHistory" class="close-button" aria-label="Cerrar">×</button></div>
+      <p class="history-note">Las facturas se guardan solo en este navegador y dispositivo.</p>
+      <div id="historyList" class="history-list"></div>
+    </div>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
