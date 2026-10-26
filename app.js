@@ -15,7 +15,7 @@ function parseQuantity(value) { return Number(String(value).replace(/\./g, '').r
 function dateValue(date) { return date.toISOString().slice(0, 10); }
 function escapeHtml(value = '') { return String(value).replace(/[&<>'"]/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', "'":'&#039;', '"':'&quot;' }[c])); }
 
-function showApp() { loginView.classList.add('hidden'); appView.classList.remove('hidden'); renderItems(); renderPreview(); }
+function showApp() { loginView.classList.add('hidden'); appView.classList.remove('hidden'); syncDocumentTypeNav(); renderItems(); renderPreview(); }
 if (sessionStorage.getItem('hp-auth') === 'true') showApp();
 
 $('#loginForm').addEventListener('submit', (event) => {
@@ -50,10 +50,14 @@ function collectData() { return { documentType: $('#documentType').value, number
 function invoiceTotal() { return items.reduce((sum, i) => sum + i.quantity * i.price * (1 + i.tax / 100), 0); }
 function saveToHistory() { const history = JSON.parse(localStorage.getItem('hp-history') || '[]'); const data = collectData(); history.unshift({ id: Date.now(), data, items: JSON.parse(JSON.stringify(items)), total: invoiceTotal() }); localStorage.setItem('hp-history', JSON.stringify(history.slice(0, 30))); }
 function renderHistory() { const history = JSON.parse(localStorage.getItem('hp-history') || '[]'); $('#historyList').innerHTML = history.length ? history.map(entry => `<div class="history-item"><div><strong>${entry.data.documentType === 'presupuesto' ? 'Presupuesto' : 'Factura'} · ${escapeHtml(entry.data.number || 'Sin número')}</strong><small>${escapeHtml(entry.data.clientName || 'Cliente particular')} · ${formatDate(entry.data.date)} · ${formatMoney(entry.total)}</small></div><div class="history-actions"><button data-load-history="${entry.id}">Abrir</button><button class="delete-history" data-delete-history="${entry.id}">Eliminar</button></div></div>`).join('') : '<div class="history-empty">Todavía no hay documentos guardados.<br>Descarga una factura o presupuesto para añadirlo al historial.</div>'; }
-function openHistory() { renderHistory(); $('#historyModal').classList.remove('hidden'); }
+function closeMobileMenu() { const sidebar = document.querySelector('.sidebar'); sidebar.classList.remove('menu-open'); $('#mobileMenuToggle').setAttribute('aria-expanded', 'false'); $('#mobileMenuToggle').textContent = '☰'; }
+function syncDocumentTypeNav() { const type = $('#documentType').value; $('#invoiceNav').classList.toggle('active', type === 'factura'); $('#budgetNav').classList.toggle('active', type === 'presupuesto'); }
+function setDocumentType(type) { const number = $('#invoiceNumber').value.trim(); $('#documentType').value = type; if (!number || (type === 'presupuesto' && number.startsWith('HP-')) || (type === 'factura' && number.startsWith('PP-'))) $('#invoiceNumber').value = type === 'presupuesto' ? 'PP-2024-001' : 'HP-2024-001'; syncDocumentTypeNav(); closeMobileMenu(); renderPreview(); saveLocal(); }
+function openHistory() { closeMobileMenu(); renderHistory(); $('#historyModal').classList.remove('hidden'); }
 function loadHistory(id) { const history = JSON.parse(localStorage.getItem('hp-history') || '[]'); const entry = history.find(item => item.id === id); if (!entry) return; Object.entries(entry.data).forEach(([key, value]) => { const el = ({ documentType:'documentType', number:'invoiceNumber', date:'invoiceDate', due:'dueDate', clientName:'clientName', clientTax:'clientTax', email:'clientEmail', address:'clientAddress', notes:'notes', payment:'paymentMethod', iban:'iban' })[key]; if (el && $('#' + el)) $('#' + el).value = value; }); items = entry.items || []; renderItems(); renderPreview(); saveLocal(); $('#historyModal').classList.add('hidden'); }
 $('#historyNav').addEventListener('click', (event) => { event.preventDefault(); openHistory(); });
-$('#budgetNav').addEventListener('click', (event) => { event.preventDefault(); $('#documentType').value = 'presupuesto'; if (!$('#invoiceNumber').value || $('#invoiceNumber').value.startsWith('HP-')) $('#invoiceNumber').value = 'PP-2024-001'; renderPreview(); saveLocal(); });
+$('#invoiceNav').addEventListener('click', (event) => { event.preventDefault(); setDocumentType('factura'); });
+$('#budgetNav').addEventListener('click', (event) => { event.preventDefault(); setDocumentType('presupuesto'); });
 $('#closeHistory').addEventListener('click', () => $('#historyModal').classList.add('hidden'));
 $('#historyModal').addEventListener('click', (event) => { if (event.target.id === 'historyModal') $('#historyModal').classList.add('hidden'); const loadId = event.target.dataset.loadHistory; const deleteId = event.target.dataset.deleteHistory; if (loadId) loadHistory(Number(loadId)); if (deleteId) { const history = JSON.parse(localStorage.getItem('hp-history') || '[]').filter(entry => entry.id !== Number(deleteId)); localStorage.setItem('hp-history', JSON.stringify(history)); renderHistory(); } });
 function formatDate(value) { if (!value) return '—'; return new Date(`${value}T12:00:00`).toLocaleDateString('es-ES'); }
@@ -71,6 +75,6 @@ function renderPreview() {
 
 document.querySelectorAll('#invoiceForm input, #invoiceForm textarea, #invoiceForm select').forEach(el => el.addEventListener('input', () => { renderPreview(); saveLocal(); }));
 function saveLocal() { localStorage.setItem(STORAGE_KEY, JSON.stringify({ data: collectData(), items })); $('#savedStatus').textContent = '● Guardado localmente'; }
-function loadLocal() { const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null'); if (!saved) return; items = saved.items || items; Object.entries(saved.data || {}).forEach(([key, value]) => { const el = ({ number:'invoiceNumber', date:'invoiceDate', due:'dueDate', clientName:'clientName', clientTax:'clientTax', email:'clientEmail', address:'clientAddress', notes:'notes', payment:'paymentMethod', iban:'iban' })[key]; if (el && $('#' + el)) $('#' + el).value = value; }); }
-loadLocal(); renderItems(); renderPreview();
+function loadLocal() { const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null'); if (!saved) return; items = saved.items || items; Object.entries(saved.data || {}).forEach(([key, value]) => { const el = ({ documentType:'documentType', number:'invoiceNumber', date:'invoiceDate', due:'dueDate', clientName:'clientName', clientTax:'clientTax', email:'clientEmail', address:'clientAddress', notes:'notes', payment:'paymentMethod', iban:'iban' })[key]; if (el && $('#' + el)) $('#' + el).value = value; }); }
+loadLocal(); syncDocumentTypeNav(); renderItems(); renderPreview();
 $('#downloadPdf').addEventListener('click', () => { renderPreview(); saveToHistory(); window.print(); });
