@@ -31,6 +31,8 @@
 .help-box>span{border-color:#82a9d5}
 .help-box small{color:#a9c1dd}
 .avatar{background:#dceafa}
+.brand-row{display:block}.mobile-menu-toggle{display:none}
+@media(max-width:720px){.brand-row{display:flex;align-items:center;justify-content:space-between}.mobile-menu-toggle{display:block;background:transparent;color:#fff;font-size:23px;padding:4px 2px}.main-nav{display:none;margin-top:16px}.sidebar.menu-open .main-nav{display:grid}.sidebar .brand-lockup{padding:0}.sidebar-bottom{display:none}}
 .form-grid.four{grid-template-columns:repeat(4,1fr)}
 @media(max-width:720px){.form-grid.four{grid-template-columns:1fr}}
 .history-modal{position:fixed;inset:0;background:#102d594d;display:grid;place-items:center;padding:20px;z-index:20}

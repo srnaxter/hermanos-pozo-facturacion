@@ -2,6 +2,7 @@ const $ = (selector) => document.querySelector(selector);
 const loginView = $('#loginView');
 const appView = $('#appView');
 const STORAGE_KEY = 'hermanos-pozo-invoice';
+$('#mobileMenuToggle').addEventListener('click', () => { const sidebar = document.querySelector('.sidebar'); const open = sidebar.classList.toggle('menu-open'); $('#mobileMenuToggle').setAttribute('aria-expanded', String(open)); $('#mobileMenuToggle').textContent = open ? '×' : '☰'; });
 let items = [
   { description: 'Servicio profesional', quantity: 1, price: 0, tax: 21 },
   { description: 'Desplazamiento', quantity: 1, price: 0, tax: 21 }
