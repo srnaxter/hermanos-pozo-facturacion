@@ -48,7 +48,7 @@
       <div class="sidebar-bottom"><div class="help-box"><span>?</span><div><strong>¿Necesitas ayuda?</strong><small>Estamos para ayudarte</small></div></div><button id="logoutButton" class="logout">↪ Cerrar sesión</button></div>
     </aside>
     <main class="main-content">
-      <header class="topbar"><div><p class="breadcrumb">Facturas <span>/</span> Nueva factura</p><h2>Nueva factura</h2></div><div class="top-actions"><span class="saved-status" id="savedStatus">● Guardado localmente</span><div class="avatar">HP</div></div></header>
+      <header class="topbar"><div><p class="breadcrumb"><span id="pageSectionTitle">Facturas</span> <span>/</span> <span id="pageDocumentTitle">Nueva factura</span></p><h2 id="pageTitle">Nueva factura</h2></div><div class="top-actions"><span class="saved-status" id="savedStatus">● Guardado localmente</span><div class="avatar">HP</div></div></header>
       <div class="content-grid">
         <section class="editor-panel">
           <div class="section-heading"><div><p class="eyebrow">Paso 1 de 1</p><h3>Detalles de la factura</h3></div><span class="draft-pill">Borrador</span></div>
@@ -59,7 +59,7 @@
             <div class="form-section bottom-fields"><div><label for="notes">Notas para el cliente</label><textarea id="notes" rows="3" placeholder="Gracias por confiar en nosotros."></textarea></div><div><label for="paymentMethod">Método de pago</label><select id="paymentMethod"><option>Transferencia bancaria</option><option>Tarjeta</option><option>Efectivo</option><option>Bizum</option></select><label for="iban">IBAN (opcional)</label><input id="iban" placeholder="ES00 0000 0000 0000 0000 0000" /></div></div>
           </form>
         </section>
-        <aside class="preview-panel"><div class="preview-top"><div><p class="eyebrow">Vista previa</p><h3>Factura</h3></div><button id="downloadPdf" class="primary-button">↓ Descargar PDF</button></div><div id="invoicePreview" class="invoice-paper"></div><p class="preview-tip">Consejo: revisa los datos antes de descargar el documento.</p></aside>
+        <aside class="preview-panel"><div class="preview-top"><div><p class="eyebrow">Vista previa</p><h3 id="previewTitle">Factura</h3></div><button id="downloadPdf" class="primary-button">↓ Descargar PDF</button></div><div id="invoicePreview" class="invoice-paper"></div><p class="preview-tip">Consejo: revisa los datos antes de descargar el documento.</p></aside>
       </div>
     </main>
   </div>
@@ -73,5 +73,3 @@
   <script src="app.js"></script>
 </body>
 </html>
-
-<!-- responsive navigation update -->
